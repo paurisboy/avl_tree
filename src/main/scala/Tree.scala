@@ -12,6 +12,16 @@ trait Tree[+T] {
 }
 
 object Tree {
+  
+  def apply[T : Ordering](elems: T*): Tree[T] = {
+    val it = elems.iterator
+    def createTree(it: Iterator[T], tree: Tree[T]): Tree[T] = {
+      if(it.hasNext) createTree(it, tree.insert(it.next()))
+      else tree
+    }
+    createTree(it, Empty)
+  }
+  
   case class Node[+T](left: Tree[T], right: Tree[T], data: T) extends Tree[T] {
 
     val height = 1 + Math.max(left.height, right.height)
